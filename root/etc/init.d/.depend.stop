@@ -1,0 +1,9 @@
+TARGETS = triggerhappy ifplugd fake-hwclock webiopi lirc dnsmasq lightdm wicd plymouth urandom alsa-utils sendsigs rsyslog umountnfs.sh rpcbind nfs-common hwclock.sh networking umountfs umountroot halt reboot
+sendsigs: webiopi lightdm plymouth lirc triggerhappy ifplugd alsa-utils wicd dnsmasq
+rsyslog: webiopi lirc sendsigs dnsmasq
+umountnfs.sh: webiopi lightdm plymouth lirc triggerhappy ifplugd sendsigs rsyslog alsa-utils wicd dnsmasq
+networking: webiopi umountnfs.sh ifplugd rpcbind dnsmasq
+umountfs: networking webiopi umountnfs.sh lightdm plymouth lirc triggerhappy ifplugd alsa-utils wicd urandom hwclock.sh rpcbind dnsmasq
+umountroot: umountfs fake-hwclock
+halt: umountroot
+reboot: umountroot

@@ -1,0 +1,17 @@
+TARGETS = rsyslog triggerhappy ifplugd killprocs bootlogs motd sudo webiopi dbus lirc single dnsmasq ntp ssh dphys-swapfile lightdm wicd cron rsync plymouth rc.local rmnologin
+INTERACTIVE =
+webiopi: rsyslog
+dbus: rsyslog
+lirc: rsyslog
+single: killprocs bootlogs motd
+dnsmasq: rsyslog
+ntp: rsyslog
+ssh: rsyslog
+dphys-swapfile: rsyslog
+lightdm: dbus
+wicd: dbus
+cron: rsyslog dnsmasq
+rsync: rsyslog dnsmasq
+plymouth: webiopi rsyslog lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd cron dnsmasq ntp ssh rsync sudo dphys-swapfile
+rc.local: webiopi rsyslog lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd cron dnsmasq ntp ssh rsync sudo dphys-swapfile
+rmnologin: sudo webiopi rsyslog lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd cron dnsmasq ntp ssh rsync dphys-swapfile
