@@ -1,0 +1,22 @@
+-- *******************************************************************
+--  systemLogScript: Script for creating systemLog table
+--   Usage:
+--       $ sqlite3 systemLog.db < systemLogScript
+--
+--   Note: The trigger insert_exam_timeEnter
+--          updates timeEnter in exam
+-- *******************************************************************
+-- *******************************************************************
+CREATE TABLE tb_sysLog (ekey      INTEGER PRIMARY KEY,
+				   msg        VARCHAR(255),
+                   type       VARCHAR(30),
+                   timeEnter DATE);
+
+CREATE TRIGGER insert_log_timeEnter AFTER  INSERT ON tb_sysLog 
+BEGIN
+
+UPDATE tb_sysLog  SET timeEnter = DATETIME('NOW')
+         WHERE rowid = new.rowid;
+END;
+-- *******************************************************************
+-- *******************************************************************

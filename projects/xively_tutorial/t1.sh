@@ -1,0 +1,2 @@
+FEED_ID=1277480511 API_KEY=9MzbRooFNPJIy3zxVNRPUPll4JGSAKxsMmg4STZHbzNKTT0g DEBUG=true python xively_tutorial.py
+
