@@ -1,1 +1,3 @@
-/etc/rpi-event/systemLog.py 'eMsg111' 'eType111'
+_IP=$(hostname -I) || true
+_HOST=$(hostname) || true
+/etc/rpi-event/systemLog.py $_HOST:$_IP "rc.local"
