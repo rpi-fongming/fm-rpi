@@ -1,0 +1,29 @@
+-- *******************************************************************
+--  examScript: Script for creating dbase table
+--   Usage:
+--       $ sqlite3 sysEvent.db < sysEventScript
+--
+--   Note: The trigger insert_eEnter
+--          updates timeEnter in tb_sysEvent
+-- *******************************************************************
+-- *******************************************************************
+DROP TABLE IF EXISTS tb_sysEvent;
+
+CREATE TABLE tb_sysEvent (eID      INTEGER PRIMARY KEY,
+eMsg      VARCHAR(255),
+eType     VARCHAR(30),
+eStatus   VARCHAR(30),
+eRemark   VARCHAR(255),
+eEnter    DATE);
+
+CREATE TRIGGER insert_eEnter AFTER  INSERT ON tb_sysEvent
+BEGIN
+
+UPDATE tb_sysEvent  SET eEnter = DATETIME('NOW')
+         WHERE rowid = new.rowid;
+END;
+
+insert into tb_sysEvent(eMsg,eType) values("create dbase","system");
+select * from tb_sysEvent;
+-- *******************************************************************
+-- *******************************************************************
