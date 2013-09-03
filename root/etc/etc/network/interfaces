@@ -1,0 +1,17 @@
+auto lo
+
+iface lo inet loopback
+iface eth0 inet dhcp
+
+allow-hotplug wlan0
+auto wlan0
+
+iface wlan0 inet dhcp
+#	wpa-ssid "substance"
+#	wpa-psk "6505679995" 
+	wpa-ssid "Instacube_n"
+	wpa-psk "D2ma12345"
+
+#iface wlan0 inet manual
+#wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+#iface default inet dhcp

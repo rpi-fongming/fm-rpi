@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import sys,os
+#thread,threading
+import tweepy
+
+CONSUMER_KEY = 'GvCF4RA5wnB1W25FvOfWvA'
+CONSUMER_SECRET = '4NCGsZV6qqIEi0Ux4EI2yY1neTWifnY3pAHANlm5k'
+ACCESS_KEY = '1654721785-78Eqt2R5uLvghITw3ux7GarSdtMdNGmG3eOnAWw'
+ACCESS_SECRET = 'v6Q1zEpTpLOCbpn5ZJDV8as71yrARitY5m3COxXA'
+
+def shell_cmd(cmd):
+	_result = os.popen("su -c \"" + cmd + "\"").read()
+	_result = _result.replace("\r","")
+	_result = _result.replace("\n","")
+	print(_result)
+	return(_result)
+
+print (os.popen("ls").read())
+myDate = shell_cmd("date +\"%Y%m%d:%H%M%S\"")
+myHost = shell_cmd("hostname")
+myUptime = shell_cmd("uptime")
+myRoute = shell_cmd("route | grep default")
+
+myStatus = myHost + " > " + myUptime
+print myStatus
+print myRoute
+
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+api = tweepy.API(auth)
+#api.update_status(myStatus)
+
+
