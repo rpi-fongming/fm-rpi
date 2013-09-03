@@ -19,7 +19,7 @@ eEnter    DATE);
 CREATE TRIGGER insert_eEnter AFTER  INSERT ON tb_sysEvent
 BEGIN
 
-UPDATE tb_sysEvent  SET eEnter = DATETIME('NOW')
+UPDATE tb_sysEvent  SET eEnter = DATETIME('NOW','localtime')
          WHERE rowid = new.rowid;
 END;
 

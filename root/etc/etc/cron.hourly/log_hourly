@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+#
+#run-parts --test /etc/cron.daily
+#
+import sys,os,thread,threading
+
+def shell_cmd(cmd):
+	_result = os.popen("su -c \"" + cmd + "\"").read()
+	_result = _result.replace("\r","")
+	_result = _result.replace("\n","")
+#	print(_result)
+	return(_result)
+
+eMsg = "Test twitter message"
+eType = "twitter_update"
+cmd = "/etc/rpi-event/sysLog.py" + " '" + eMsg +  "' '" + eType + "'"
+shell_cmd (cmd)
