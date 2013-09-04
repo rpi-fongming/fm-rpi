@@ -1,0 +1,29 @@
+-- *******************************************************************
+--  examScript: Script for creating dbase table
+--   Usage:
+--       $ sqlite3 rpi_event.db < rpi_eventScript
+--
+--   Note: The trigger insert_eEnter
+--          updates timeEnter in tb_rpiEvent
+-- *******************************************************************
+-- *******************************************************************
+DROP TABLE IF EXISTS tb_rpiEvent;
+
+CREATE TABLE tb_rpiEvent(eID      INTEGER PRIMARY KEY,
+eType     VARCHAR(30),
+eMsg      VARCHAR(255),
+eStatus   VARCHAR(30),
+eRemark   VARCHAR(255),
+eEnter    DATE);
+
+CREATE TRIGGER insert_eEnter AFTER  INSERT ON tb_rpiEvent
+BEGIN
+
+UPDATE tb_rpiEvent SET eEnter = DATETIME('NOW','localtime')
+         WHERE rowid = new.rowid;
+END;
+
+insert into tb_rpiEvent(eMsg,eType) values("create dbase","system");
+select * from tb_rpiEvent;
+-- *******************************************************************
+-- *******************************************************************

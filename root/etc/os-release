@@ -1,7 +1,7 @@
-PRETTY_NAME="Debian GNU/Linux 7.0 (wheezy)"
+PRETTY_NAME="Debian GNU/Linux 7 (wheezy)"
 NAME="Debian GNU/Linux"
-VERSION_ID="7.0"
-VERSION="7.0 (wheezy)"
+VERSION_ID="7"
+VERSION="7 (wheezy)"
 ID=debian
 ANSI_COLOR="1;31"
 HOME_URL="http://www.debian.org/"

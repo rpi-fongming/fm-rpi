@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+#
+#run-parts --test /etc/cron.daily
+#
+import sys,os,thread,threading
+from subprocess import call
+
+def shell_cmd(cmd):
+	_result = os.popen("su -c \"" + cmd + "\"").read()
+	_result = _result.replace("\r","")
+	_result = _result.replace("\n","")
+#	print(_result)
+	return(_result)
+
+myDate = shell_cmd("date +\"%Y%m%d:%H%M%S\"")
+myHost = shell_cmd("hostname")
+myUptime = shell_cmd("uptime")
+
+myStatus = myHost + " > " + myUptime
+#print myStatus
+
+eMsg = myStatus
+eType = "twitter_update"
+call(['/etc/rpi-event/sysLog.py', eMsg, eType])

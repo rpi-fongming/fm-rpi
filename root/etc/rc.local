@@ -20,7 +20,7 @@ else
   _IP="0.0.0.0"
 fi
 
-/etc/rpi-event/sysLog.py $_HOST:$_IP "rc.local"
+rpi-log.py $_HOST:$_IP "rc.local"
 
 #modprobe -r lirc_rpi 
 #modprobe lirc_rpi gpio_in_pin=24 gpio_out_pin=23
@@ -38,8 +38,9 @@ iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source 192.168.0.1
 /etc/init.d/dnsmasq restart
 /etc/init.d/vpnserver restart
 
-/etc/rpi-event/sysLog.py "start dnsmasq" "rc.local"
-/etc/rpi-event/sysLog.py "start vpnserver" "rc.local"
+rpi-log.py "start dnsmasq" "rc.local"
+rpi-log.py "start vpnserver" "rc.local"
 
-/etc/rpi-event/sysLog.py test 1
+
+rpi-log.py show
 exit 0

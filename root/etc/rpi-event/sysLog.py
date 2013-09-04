@@ -31,33 +31,35 @@ def sql_init(db_con):
 ######################################################################################
 ## Main function start here
 
-if (len(sys.argv) >=3):
-	eMsg = sys.argv[1]
-	eType = sys.argv[2]
-else:
-	print ("Not enough arg")
-	sys.exit(0)
-
 file_path = os.path.dirname(sys.argv[0])
 file_db=file_path+"/sysEvent.db"
-#print (file_db, eMsg, eType)
 con = sqlite.connect(file_db)
 
-if (eMsg=="init_db"):
-	sql_init(con);
+if (len(sys.argv) == 1):
+	print (sys.argv[0]+ " eMsg eType")
 	sys.exit(0)
 
-if (eMsg=="test"):
-	sql = "select * from tb_sysEvent"
-	result = sql_cmd(con,sql)
-	for row in result:
-		print row
+if (len(sys.argv) == 2):
+	eMsg = sys.argv[1]
+	if (eMsg=="init_db"):
+		sql_init(con);
+	if (eMsg=="test") or (eMsg=="show"):
+		sql = "select * from tb_sysEvent"
+		result = sql_cmd(con,sql)
+		for row in result:
+			print row
 	sys.exit(0)
+
+
+eMsg = sys.argv[1]
+eType = sys.argv[2]
+
+#print ("-----------------------")
+#print (file_db, eMsg, eType)
 
 if (not os.path.exists(file_db)):
 	print ("file does not exist")
 	sql_init(con);
-
 
 sql = "insert into tb_sysEvent(eMsg,eType) values(\"" + eMsg + "\",\"" + eType + "\");"
 result= sql_cmd(con, sql)

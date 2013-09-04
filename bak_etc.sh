@@ -1,4 +1,4 @@
-cp /etc ./root/etc -r
+cp /etc ./root -r
 _HOSTNAME=$(hostname) || true
 #cp /etc ./root/$_IP/etc -r
 #tar -zcvf $_HOSTNAME.tar.gz /etc

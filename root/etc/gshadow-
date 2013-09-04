@@ -50,4 +50,3 @@ fuse:!::
 lightdm:!::
 indiecity:!::root
 i2c:!::
-gpio:!::
