@@ -20,7 +20,8 @@ else
   _IP="0.0.0.0"
 fi
 
-rpi-log.py $_HOST:$_IP "rc.local"
+rpi-log.py "rc.local" "system bootup" 
+rpi-log.py "rc.local" $_HOST:$_IP 
 
 #modprobe -r lirc_rpi 
 #modprobe lirc_rpi gpio_in_pin=24 gpio_out_pin=23
@@ -29,8 +30,6 @@ rpi-log.py $_HOST:$_IP "rc.local"
 #modprobe lirc_rpi1 gpio_in_pin=20 gpio_out_pin=21
 
 #python3 ~/examples/blink &
-#/etc/rpi-event/systog.py "LED blinking" "rc.local"
-
 
 iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source 192.168.0.102
 /etc/init.d/vpnserver restart
@@ -38,8 +37,8 @@ iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source 192.168.0.1
 /etc/init.d/dnsmasq restart
 /etc/init.d/vpnserver restart
 
-rpi-log.py "start dnsmasq" "rc.local"
-rpi-log.py "start vpnserver" "rc.local"
+rpi-log.py "rc.local" "start dnsmasq" 
+rpi-log.py "rc.local" "start vpnserver" 
 
 
 rpi-log.py show

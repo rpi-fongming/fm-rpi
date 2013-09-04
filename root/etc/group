@@ -51,3 +51,4 @@ lightdm:x:109:
 indiecity:x:1001:root
 i2c:x:110:
 gpio:x:998:
+ssl-cert:x:111:

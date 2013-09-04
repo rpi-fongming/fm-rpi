@@ -1,17 +1,18 @@
-TARGETS = rsyslog triggerhappy ifplugd iptables-persistent killprocs motd sudo dnsmasq webiopi dbus ntp ssh dphys-swapfile lightdm xdm cron rsync bootlogs plymouth single rc.local rmnologin
-INTERACTIVE =
+TARGETS = rsyslog triggerhappy ifplugd killprocs bootlogs motd sudo dnsmasq webiopi dbus lirc single ntp ssh dphys-swapfile apache2 lightdm wicd cron rsync plymouth rc.local rmnologin
+INTERACTIVE = apache2
 dnsmasq: rsyslog
 webiopi: rsyslog
 dbus: rsyslog
+lirc: rsyslog
+single: killprocs bootlogs motd
 ntp: rsyslog
 ssh: rsyslog
 dphys-swapfile: rsyslog
+apache2: rsyslog dnsmasq
 lightdm: dbus
-xdm: dnsmasq
+wicd: dbus
 cron: rsyslog dnsmasq
 rsync: rsyslog dnsmasq
-bootlogs: xdm
-plymouth: xdm dnsmasq rsyslog webiopi lightdm dbus triggerhappy ifplugd iptables-persistent bootlogs motd ntp ssh cron rsync sudo dphys-swapfile
-single: killprocs bootlogs motd
-rc.local: dnsmasq rsyslog webiopi lightdm dbus xdm triggerhappy ifplugd iptables-persistent bootlogs motd ntp ssh cron rsync sudo dphys-swapfile
-rmnologin: sudo dnsmasq rsyslog webiopi lightdm dbus xdm triggerhappy ifplugd iptables-persistent bootlogs motd ntp ssh cron rsync dphys-swapfile
+plymouth: dnsmasq rsyslog webiopi lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd ntp ssh cron rsync sudo dphys-swapfile apache2
+rc.local: dnsmasq rsyslog webiopi lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd ntp ssh cron rsync sudo dphys-swapfile apache2
+rmnologin: sudo dnsmasq rsyslog webiopi lightdm dbus lirc triggerhappy ifplugd wicd bootlogs motd ntp ssh cron rsync dphys-swapfile apache2

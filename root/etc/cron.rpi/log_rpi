@@ -7,45 +7,81 @@ from subprocess import call
 def getDatetime():
 	return (os.popen("date +\"%Y%m%d:%H%M%S\"").readline().replace("\n","").strip())
 
+def getUptime():
+    res = os.popen("cat /proc/uptime | cut -d' ' -f1").readline()
+    return(res.replace("\n","").strip())
+
+def getIP():
+    res = os.popen("hostname -I").readline().replace("\n","").strip()
+    return(res)
+
+def test():
+	print ("log_rpi test" , _UpTime)
+	
+def run():
+	update_rpi_sensor=0
+	update_twitter=0
+	update_xively=0
+	check_softEther=0
+	
+	if (_UpTime<(50*60)):
+		check_softEther=1
+			
+	if ((_CurMinute % 2)==0):	# on every 2Minutes
+		print ("2 minutes trigger")
+		update_rpi_sensor=1
+
+	if ((_CurMinute % 5)==0):	# on every 5Minutes
+		print ("5 minutes trigger")
+		update_twitter=1
+		update_xively=1
+
+	if ((_CurMinute % 15)==0):	# on every 15Minutes
+		print ("15 minutes trigger")
+		update_rpi_sensor=1
+		
+	if ((_CurMinute % 30)==0):	# on every 30Minutes
+		print ("30 minutes trigger")
+		update_rpi_sensor=1
+		if (_UpTime>(5*60)):
+			check_softEther=1
+
+	if (_CurMinute ==0):	# on every 60Minutes
+		print ("60 minutes trigger")
+		update_rpi_sensor=1
+
+
+	# Add event into rpi_log record
+	eType = "cron.rpi"
+
+	if (update_rpi_sensor==1):
+		call(['rpi-sensor.py'])
+
+	if (update_twitter==1):
+		call(['rpi-log.py',eType, "update_twitter"])
+
+	if (update_xively==1):
+		call(['rpi-log.py',eType, "update_xively"])
+
+	if (check_softEther==1):
+		print ("check_softEther")
+		if (_Hostname.find('192.168.7.1') == -1):
+			print ("call rpi-bootup.py")
+			call(['rpi-bootup.py'])
+
+
+# Main function here
 _CurDatetime = getDatetime()
 _CurMinute=int(_CurDatetime [11:13])
+_UpTime = int (float(getUptime()))
+_Hostname = getIP()
 
-update_rpi_sensor=0
-update_twitter=0
-update_xively=0
+if (len(sys.argv) == 1):
+	run()
+	sys.exit(0)
 
-#print (_CurDatetime ,_CurMinute, _CurMinute % 5)	
+if 	(sys.argv[1]=="test"):
+	test()
+	sys.exit(0)
 
-if ((_CurMinute % 2)==0):	# on every 2Minutes
-	print ("2 minutes trigger")
-	update_rpi_sensor=1
-
-if ((_CurMinute % 5)==0):	# on every 5Minutes
-	print ("5 minutes trigger")
-	update_twitter=1
-	update_xively=1
-
-if ((_CurMinute % 15)==0):	# on every 15Minutes
-	print ("15 minutes trigger")
-	update_rpi_sensor=1
-	
-if ((_CurMinute % 30)==0):	# on every 30Minutes
-	print ("30 minutes trigger")
-	update_rpi_sensor=1
-
-if (_CurMinute ==0):	# on every 60Minutes
-	print ("60 minutes trigger")
-	update_rpi_sensor=1
-
-
-# Add event into rpi_log record
-
-if (update_rpi_sensor==1):
-    call(['rpi-sensor.py'])
-
-if (update_twitter==1):
-    call(['rpi-log.py', "update_twitter", "cron.rpi"])
-
-if (update_xively==1):
-    call(['rpi-log.py', "update_xively", "cron.rpi"])
-
+print (sys.argv[1])

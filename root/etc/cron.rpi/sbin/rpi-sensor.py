@@ -35,6 +35,10 @@ def getIP():
     res = os.popen("hostname -I").readline().replace("\n","").strip()
     return(res)
 
+def getGateway():
+	res = os.popen("route -n | grep UG | awk '{print $2 \":\" $8}'").readline().replace("\n","").strip()
+	return(res)
+
 def getpubip(): #Gets the public IP by doing a get of the webpage below
    url = "myip.xname.org:80"
    import httplib, urllib
@@ -60,9 +64,9 @@ mySensor += "CPU_RAM_USE="+getRAMinfo()[1]+";"
 mySensor += "CPU_RAM_FREE="+getRAMinfo()[2]+";"
 mySensor += "CPU_LIP="+getIP()+";"
 mySensor += "CPU_PIP="+getpubip()+";"
+mySensor += "CPU_GATEWAY=" + getGateway() + ";"
 
 eMsg = mySensor
 eType = "sensor_update"
 
-#call(['/etc/rpi-event/sysLog.py', eMsg, eType])
-call(['rpi-log.py', eMsg, eType])
+call(['rpi-log.py', eType, eMsg])

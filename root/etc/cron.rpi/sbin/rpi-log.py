@@ -28,36 +28,43 @@ def sql_init(db_con):
 	for row in result:
 		print row
 
+def getSerial():
+    res = os.popen("cat /proc/cpuinfo | grep Serial | cut -d':' -f2").readline().replace("\n","").strip()
+    return(res[8:])
+
 ######################################################################################
 ## Main function start here
-
+cpu_sn = getSerial()
 file_path = os.path.dirname(sys.argv[0])
-file_db=file_path+"/rpi-event.db"
+#file_db=file_path+"/rpi-"+cpu_sn+".log.db"
+file_db=file_path + "/rpi-log.db"
 file_script=file_path+"/rpi-eventScript"
-#print (file_path, file_db,file_script,sys.argv[0])
+#print (file_path, file_db,file_script,sys.argv[0],os.path.dirname(sys.argv[0])+"/rpi-log.db")
+#print (cpu_sn, file_db)
 con = sqlite.connect(file_db)
 
 if (len(sys.argv) == 1):
-	print (sys.argv[0]+ " eMsg eType")
+	print (os.path.basename(sys.argv[0])+ " {eType} {eMsg} ")
 	sys.exit(0)
 
 if (len(sys.argv) == 2):
-	eMsg = sys.argv[1]
-	if (eMsg=="init_db"):
+	eType = sys.argv[1]
+	if (eType=="show_db"):
+		print file_db;
+	if (eType=="init_db"):
 		sql_init(con);
-	if (eMsg=="test") or (eMsg=="show"):
-		sql = "select * from tb_rpiEvent"
+	if (eType=="test") or (eType=="show"):
+		sql = "select * from tb_rpiEvent ORDER BY eID DESC limit 10"
 		result = sql_cmd(con,sql)
-		for row in result:
+		for row in reversed(result):
 			print row
 	sys.exit(0)
 
+eMsg = sys.argv[2]
+eType = sys.argv[1]
 
-eMsg = sys.argv[1]
-eType = sys.argv[2]
-
-#print ("-----------------------")
-#print (file_db, eMsg, eType)
+if (eType=="select"):
+	print (eMsg);
 
 if (not os.path.exists(file_db)):
 	print ("file does not exist")
