@@ -100,7 +100,7 @@ case "$1" in
 
 		if [ "$START_LIRCD" = "true" ]; then
 			log_daemon_msg "Starting remote control daemon(s) : LIRC "
-			LIRCD_ARGS=`build_args $LIRCD_ARGS`
+			LIRCD_ARGS=`build_args $LIRCD_ARGS -a`
 
 			if [ ! -z "$LIRCD_ARGS" ]; then
 				start-stop-daemon --start --quiet --oknodo --exec /usr/sbin/lircd -- $LIRCD_ARGS < /dev/null
@@ -139,7 +139,7 @@ case "$1" in
 
 		if [ "$START_LIRCD" = "true" ]; then
 			log_daemon_msg "Stopping remote control daemon(s): LIRC"
-			start-stop-daemon --stop --quiet --exec /usr/sbin/lircd
+			start-stop-daemon --stop --quiet --exec /usr/sbin/lircd 
 			log_end_msg $?
 		fi
 		;;
@@ -149,7 +149,7 @@ case "$1" in
 		fi
 
 		if [ "$START_LIRCD" = "true" ]; then
-			start-stop-daemon --stop --quiet --signal 1 --exec /usr/sbin/lircd
+			start-stop-daemon --stop --quiet --signal 1 --exec /usr/sbin/lircd -a
 		fi
 
 		if [ "$START_LIRCMD" = "true" ]; then

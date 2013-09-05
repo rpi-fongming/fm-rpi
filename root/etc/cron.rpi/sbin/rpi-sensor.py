@@ -16,7 +16,7 @@ def getCPUtemperature():
     return(res.replace("temp=","").replace("'C\n",""))
 
 def getDiskSpace():
-    p = os.popen("df -h / | grep /dev/root").readline()
+    p = os.popen("df | grep /dev/root").readline()
     return (p.split()[2:4])
 	 
 def getRAMinfo():

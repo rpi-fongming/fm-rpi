@@ -23,18 +23,31 @@ def getUptime():
     res = os.popen("cat /proc/uptime | cut -d' ' -f1").readline()
     return(res.replace("\n","").strip())
 
+def getGateway():
+	res = os.popen("route -n | grep UG | awk '{print $2 \":\" $8}'").readline().replace("\n","").strip()
+	return(res)
+
+def getIIP():
+    if_route = os.popen("ip route show ").read().split("\n")[1]
+    res = if_route.split("src")[1].strip()
+    return (res)
+    
 def test():
-	print ("log_rpi test" , _UpTime)
-	run_softEther()
+    print ("log_rpi test" , _UpTime)
+    print (getIIP())
+#	print(getGateway())
+    
 
 def run_softEther():
-	shell_cmd("iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source 192.168.0.102")
-	call(['/etc/init.d/vpnserver',"restart"])
-	call(['/etc/init.d/vpnserver',"stop"])
-	time.sleep(3)
-	call(['/etc/init.d/dnsmasq',"restart"])
-	call(['/etc/init.d/vpnserver',"restart"])
-	call(['rpi-log.py',"rpi-bootup.py", "start softEther"])
+    _IIP = getIIP();
+    shell_cmd("iptables --flush")
+    shell_cmd("iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source " + _IIP)
+    call(['/etc/init.d/vpnserver',"restart"])
+    call(['/etc/init.d/vpnserver',"stop"])
+    time.sleep(3)
+    call(['/etc/init.d/dnsmasq',"restart"])
+    call(['/etc/init.d/vpnserver',"restart"])
+    call(['rpi-log.py',"rpi-bootup.py", "start softEther"])
 
 
 def run_all():
