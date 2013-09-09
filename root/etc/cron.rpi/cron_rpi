@@ -61,9 +61,8 @@ def run():
 		call(['rpi-log.py',eType, "update_twitter"])
 
 	if (update_xively==1):
-        call(['rpi-log.py',eType, "update_xively"])
-        call(['rpi-updateXively.py'])
-        
+		call(['rpi-updateXively.py'])
+		call(['rpi-log.py',eType, "update_twitter"])
 
 	if (check_softEther==1):
 		print ("check_softEther")

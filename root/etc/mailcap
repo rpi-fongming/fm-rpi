@@ -52,6 +52,7 @@ application/x-bzip2; /usr/bin/xarchiver -- '%s'; edit=/usr/bin/xarchiver -- '%s'
 application/x-lzma; /usr/bin/xarchiver -- '%s'; edit=/usr/bin/xarchiver -- '%s'; description="LZMA compressed file"; test=test -n "$DISPLAY"
 text/plain; view '%s'; edit=vim '%s'; compose=vim '%s'; test=test -x /usr/bin/vim; needsterminal
 text/plain; view '%s'; edit=vi '%s'; compose=vi '%s'; needsterminal
+text/html; /usr/bin/html2text '%s'; copiousoutput; description=HTML Text
 text/*; less '%s'; needsterminal
 text/*; view '%s'; edit=vim '%s'; compose=vim '%s'; test=test -x /usr/bin/vim; needsterminal
 text/*; more '%s'; needsterminal

@@ -33,6 +33,9 @@ def test(mySensor):
     CPU_RAM_FREE = getParameter (_sensors,"CPU_RAM_FREE=")
     CPU_RAM_USE = getParameter (_sensors,"CPU_RAM_USE=")
     CPU_UPTIME = getParameter (_sensors,"CPU_UPTIME=")
+    ENV_TEMP_1 = getParameter (_sensors,"Temp1 = ").replace("*C","")
+    ENV_HUM_1 = getParameter (_sensors,"Hum1 = ").replace("%","")
+
     
     print (CPU_TEMP,CPU_DISK_FREE,CPU_DISK_USE,CPU_RAM_FREE,CPU_RAM_USE,CPU_UPTIME)
     #print (_sensors)
@@ -46,6 +49,8 @@ def Xively_update(mySensor):
     CPU_RAM_FREE = getParameter (_sensors,"CPU_RAM_FREE=")
     CPU_RAM_USE = getParameter (_sensors,"CPU_RAM_USE=")
     CPU_UPTIME = getParameter (_sensors,"CPU_UPTIME=")
+    ENV_TEMP_1 = getParameter (_sensors,"Temp1 = ").replace("*C","")
+    ENV_HUM_1 = getParameter (_sensors,"Hum1 = ").replace("%","")
 
     # open up your feed
     pac = eeml.Pachube(API_URL, API_KEY)
@@ -57,6 +62,9 @@ def Xively_update(mySensor):
     pac.update([eeml.Data("CPU_RAM_FREE", CPU_RAM_FREE)])
     pac.update([eeml.Data("CPU_RAM_USE", CPU_RAM_USE)])
     pac.update([eeml.Data("CPU_UPTIME", CPU_UPTIME)])
+    pac.update([eeml.Data("ENV_TEMP_1", ENV_TEMP_1)])
+    pac.update([eeml.Data("ENV_HUM_1", ENV_HUM_1)])
+
 
     # send data to cosm
     pac.put()    
