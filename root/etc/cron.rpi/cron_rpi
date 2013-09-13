@@ -105,7 +105,9 @@ def run(cMinute):
 
 	if (update_twitter==1):
 		call(['rpi-updateTwitter.py'])
+		call(['rpi-captureNupload.py'])
 		call(['rpi-log.py',eType, "update_twitter"])
+		call(['rpi-log.py',eType, "upload_webcam"])
 
 	if (update_xively==1):
 		call(['rpi-updateXively.py'])
@@ -133,8 +135,6 @@ _CurDatetime = getDatetime()
 _CurMinute=int(_CurDatetime [11:13])
 _UpTime = int (float(getUptime()))
 _Hostname = getIP()
-file_db = "/run/rpi-status.db"
-file_script=os.path.dirname(sys.argv[0])+"/rpi-statusScript"
 
 rpi_boot()
 

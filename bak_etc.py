@@ -14,12 +14,15 @@ def getSerial():
     return(res[8:])
 
 #_HOSTNAME=shell_cmd("hostname") 
-#_IP=shell_cmd("hostname -I | cut -d' ' -f1")
-#print (_HOSTNAME,_IP)
+myDate = shell_cmd ("date")
+
+
+print ("remove /home/pi/fm-rpi/root/etc")
 print ("copy /etc /home/pi/fm-rpi/root")
+shell_cmd("rm -r /home/pi/fm-rpi/root/etc")
 shell_cmd("cp /etc ./root -r")
 
 #tar -zcvf $_IP.tar.gz /etc
 shell_cmd ("git add *")
-shell_cmd ("git commit -m \"regular backup from " + getSerial() + "\"")
+shell_cmd ("git commit -m 'regular backup from " + getSerial() + myDate + "'")
 shell_cmd ("git push origin master")

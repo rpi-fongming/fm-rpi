@@ -31,6 +31,10 @@ add_link(file_path +"/rpi-"+cpu_sn+".log.db","/usr/local/sbin/rpi-log.db")
 add_link(file_path +"/rpi-bootup.py","/usr/local/sbin/rpi-bootup.py")
 add_link(file_path +"/rpi-updateXively.py","/usr/local/sbin/rpi-updateXively.py")
 add_link(file_path +"/rpi-updateTwitter.py","/usr/local/sbin/rpi-updateTwitter.py")
+add_link(file_path +"/rpi-uploadGdrive.py","/usr/local/sbin/rpi-uploadGdrive.py")
+add_link(file_path +"/rpi-sendGmail.py","/usr/local/sbin/rpi-sendGmail.py")
+add_link(file_path +"/rpi-captureWebcam.py","/usr/local/sbin/rpi-captureWebcam.py")
+add_link(file_path +"/rpi-captureNupload.py","/usr/local/sbin/rpi-captureNupload.py")
 
 print os.popen("ls -l /usr/local/sbin/rpi*").read()
 
