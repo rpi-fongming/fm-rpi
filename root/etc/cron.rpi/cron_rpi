@@ -32,6 +32,9 @@ def getUptime():
 def getIP():
     res = os.popen("hostname -I").readline().replace("\n","").strip()
     return(res)
+
+def network_reconnect():
+    call(['/etc/init.d/networking','restart'])
     
 def getpubip(): #Gets the public IP by doing a get of the webpage below
    url = "myip.xname.org:80"
