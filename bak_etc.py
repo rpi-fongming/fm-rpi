@@ -2,6 +2,7 @@
 #
 #
 import sys,os,thread,threading
+from subprocess import call
 
 def shell_cmd(cmd):
 	_result = os.popen("su -c \"" + cmd + "\"").read()
@@ -19,10 +20,12 @@ myDate = shell_cmd ("date")
 
 print ("remove /home/pi/fm-rpi/root/etc")
 print ("copy /etc /home/pi/fm-rpi/root")
-shell_cmd("rm -r /home/pi/fm-rpi/root/etc")
-shell_cmd("cp /etc ./root -r")
+#shell_cmd("rm -r /home/pi/fm-rpi/root/etc")
+#shell_cmd("cp /etc ./root -r")
 
 #tar -zcvf $_IP.tar.gz /etc
-shell_cmd ("git add *")
-shell_cmd ("git commit -m 'regular backup from " + getSerial() + myDate + "'")
-shell_cmd ("git push origin master")
+call(["git --git-dir '/home/pi/fm-rpi'", 'add *'])
+
+#shell_cmd ("git add *")
+#shell_cmd ("git commit -m 'regular backup from " + getSerial() + myDate + "'")
+#shell_cmd ("git push origin master")
