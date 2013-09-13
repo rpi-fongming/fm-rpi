@@ -27,6 +27,11 @@ def sql_init(db_con):
 	result = sql_cmd(con,sql)
 	for row in result:
 		print row
+	sql = "select * from tb_rpiStatus"
+	result = sql_cmd(con,sql)
+	for row in result:
+		print row
+
 
 def getSerial():
     res = os.popen("cat /proc/cpuinfo | grep Serial | cut -d':' -f2").readline().replace("\n","").strip()
@@ -49,6 +54,14 @@ if (len(sys.argv) == 1):
 
 if (len(sys.argv) == 2):
 	eType = sys.argv[1]
+	if (eType=="rpi-boot"):
+		print "booting rpi";
+		sql = "update tb_rpiStatus set boot_twitter = '0'"
+		sql_cmd(con,sql)
+		result = sql_cmd(con,"select boot_twitter from tb_rpiStatus limit 1")
+		print result[0][0]
+        
+        
 	if (eType=="show_db"):
 		print file_db;
 	if (eType=="init_db"):

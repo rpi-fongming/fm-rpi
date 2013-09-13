@@ -3,7 +3,25 @@
 #
 import sys,os,thread,threading
 from subprocess import call
+import sqlite3 as sqlite
 
+def sql_cmd(db_con, sql):
+	with db_con:
+		cur = db_con.cursor()    
+		cur.execute(sql)
+		rows = cur.fetchall()
+	return (rows)	
+
+def getParameter(words, key):
+    res = ""
+    res_begin = words.find(key)
+    if (res_begin !=-1):
+        res_end = words.find(";",res_begin)
+        if (res_end == -1):
+            res_end = len(words)
+        res = words[res_begin:res_end].replace(key,"")
+    return (res)
+    
 def getDatetime():
 	return (os.popen("date +\"%Y%m%d:%H%M%S\"").readline().replace("\n","").strip())
 
@@ -14,55 +32,84 @@ def getUptime():
 def getIP():
     res = os.popen("hostname -I").readline().replace("\n","").strip()
     return(res)
+    
+def getpubip(): #Gets the public IP by doing a get of the webpage below
+   url = "myip.xname.org:80"
+   import httplib, urllib
+   headers = {"Content-type": "HTML"}
+   params = ''
+   try: 
+   	conn = httplib.HTTPConnection(url)
+   	conn.request("GET", "/")
+  	response = conn.getresponse()
+   	message = response.status, response.reason
+   	message = str(message) 
+   	#print message #print http responce for debugging
+   	ip = response.read()
+   	ip = ip.replace("\n","") #get rid of new line character (may not be necessary)
+   	return ip
+   except:
+	return ("0.0.0.0")	
+    
+def checkNetwork():
+    CPU_PIP=getpubip()
+    print (CPU_PIP)
+    if (CPU_PIP=="0.0.0.0"):
+        network_reconnect()
 
-def test():
-	print ("log_rpi test" , _UpTime)
-	
-def run():
+
+def run(cMinute):
 	update_rpi_sensor=0
 	update_twitter=0
 	update_xively=0
 	check_softEther=0
-	
+	check_network=0
+
 	if (_UpTime<(50*60)):
 		check_softEther=1
 			
-	if ((_CurMinute % 2)==0):	# on every 2Minutes
+	if ((cMinute % 2)==0):	# on every 2Minutes
 		print ("2 minutes trigger")
 		update_rpi_sensor=1
+		check_network=1
 
-	if ((_CurMinute % 5)==0):	# on every 5Minutes
+	if ((cMinute % 5)==0):	# on every 5Minutes
 		print ("5 minutes trigger")
-		update_twitter=1
+#		update_twitter=1
 		update_xively=1
 
-	if ((_CurMinute % 15)==0):	# on every 15Minutes
+	if ((cMinute % 15)==0):	# on every 15Minutes
 		print ("15 minutes trigger")
 		update_rpi_sensor=1
 		
-	if ((_CurMinute % 30)==0):	# on every 30Minutes
+	if ((cMinute % 30)==0):	# on every 30Minutes
 		print ("30 minutes trigger")
 		update_rpi_sensor=1
 		if (_UpTime>(5*60)):
 			check_softEther=1
 
-	if (_CurMinute ==0):	# on every 60Minutes
+	if (cMinute ==0):	# on every 60Minutes
 		print ("60 minutes trigger")
 		update_rpi_sensor=1
+		update_twitter=1
 
 
 	# Add event into rpi_log record
 	eType = "cron.rpi"
 
+	if (check_network==1):
+		checkNetwork()
+            
 	if (update_rpi_sensor==1):
 		call(['rpi-sensor.py'])
 
 	if (update_twitter==1):
+		call(['rpi-updateTwitter.py'])
 		call(['rpi-log.py',eType, "update_twitter"])
 
 	if (update_xively==1):
 		call(['rpi-updateXively.py'])
-		call(['rpi-log.py',eType, "update_twitter"])
+		call(['rpi-log.py',eType, "update_Xively"])
 
 	if (check_softEther==1):
 		print ("check_softEther")
@@ -70,16 +117,41 @@ def run():
 			print ("call rpi-bootup.py")
 			call(['rpi-bootup.py'])
 
-
+def rpi_boot():
+    file_rpi_boot = "/run/rpi-boot.log"
+    if (not os.path.exists(file_rpi_boot)):
+        os.popen("echo 'rpi-boot' > " + file_rpi_boot)
+        call(['rpi-log.py', 'rpi-boot'])
+       
+ 
+def test():
+    print ("TEST")
+    checkNetwork()
+    
 # Main function here
 _CurDatetime = getDatetime()
 _CurMinute=int(_CurDatetime [11:13])
 _UpTime = int (float(getUptime()))
 _Hostname = getIP()
+file_db = "/run/rpi-status.db"
+file_script=os.path.dirname(sys.argv[0])+"/rpi-statusScript"
+
+rpi_boot()
 
 if (len(sys.argv) == 1):
-	run()
+	run(_CurMinute)
 	sys.exit(0)
+    
+if 	(sys.argv[1]=="help"):
+    print ("cron_rpi help : print this menu")
+    print ("cron_rpi -mxx : trigger by xx minute")
+    sys.exit(0)
+
+if  (sys.argv[1].find("-m")!=-1):
+    tMin = int(sys.argv[1].replace("-m","")) % 60
+    print (tMin, " minutes trigger")
+    run (tMin)
+    sys.exit(0)
 
 if 	(sys.argv[1]=="test"):
 	test()

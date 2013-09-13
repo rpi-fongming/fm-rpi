@@ -16,6 +16,7 @@ eStatus   VARCHAR(30),
 eRemark   VARCHAR(255),
 eEnter    DATE);
 
+
 CREATE TRIGGER insert_eEnter AFTER  INSERT ON tb_rpiEvent
 BEGIN
 
@@ -25,5 +26,24 @@ END;
 
 insert into tb_rpiEvent(eMsg,eType) values("create dbase","system");
 select * from tb_rpiEvent;
+
+-- *******************************************************************
+
+DROP TABLE IF EXISTS tb_rpiStatus;
+
+CREATE TABLE tb_rpiStatus(eID      INTEGER PRIMARY KEY,
+pip     VARCHAR(30),
+boot_twitter     VARCHAR(30),
+eEnter    DATE);
+
+CREATE TRIGGER insert_eEnterStatus AFTER  INSERT ON tb_rpiStatus
+BEGIN
+
+UPDATE tb_rpiStatus SET eEnter = DATETIME('NOW','localtime')
+         WHERE rowid = new.rowid;
+END;
+
+insert into tb_rpiStatus(pip,boot_twitter) values("0.0.0.0","0");
+select * from tb_rpiStatus;
 -- *******************************************************************
 -- *******************************************************************

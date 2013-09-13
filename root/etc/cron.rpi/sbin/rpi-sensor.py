@@ -44,45 +44,67 @@ def getpubip(): #Gets the public IP by doing a get of the webpage below
    import httplib, urllib
    headers = {"Content-type": "HTML"}
    params = ''
-   conn = httplib.HTTPConnection(url)
-   conn.request("GET", "/")
-   response = conn.getresponse()
-   message = response.status, response.reason
-   message = str(message) 
-   #print message #print http responce for debugging
-   ip = response.read()
-   ip = ip.replace("\n","") #get rid of new line character (may not be necessary)
-   return ip
+   try: 
+   	conn = httplib.HTTPConnection(url)
+   	conn.request("GET", "/")
+  	response = conn.getresponse()
+   	message = response.status, response.reason
+   	message = str(message) 
+   	#print message #print http responce for debugging
+   	ip = response.read()
+   	ip = ip.replace("\n","") #get rid of new line character (may not be necessary)
+   	return ip
+   except:
+	return ("0.0.0.0")	
+	
+def getDTH11(pin):
+	cmd = "dth11 11 " + pin + "  | grep Temp"
+#	print (cmd)
+	res = os.popen(cmd).readline().replace("\n","").strip()
+#	print (res)
+	if (res.find("Temp")==-1):
+		res = os.popen('dth11 11 " + pin + "  | grep Temp').readline().replace("\n","").strip()
+	if (res.find("Temp")==-1):
+		res = os.popen('dth11 11 " + pin + "  | grep Temp').readline().replace("\n","").strip()
+	return(res.replace(",",";"))
 
-def getTempHum():
-	res = os.popen('dth11 11 4 | grep Temp').readline().replace("\n","").strip()
-	if (res.find("Temp")==-1):
-		res = os.popen('dth11 11 4 | grep Temp').readline().replace("\n","").strip()
-	if (res.find("Temp")==-1):
-		res = os.popen('dth11 11 4 | grep Temp').readline().replace("\n","").strip()
-	return(res.replace(",",";").replace("Temp","Temp1").replace("Hum","Hum1"))
 
 def run():
-	mySensor = "CPU_TEMP="+getCPUtemperature()+";"
-	mySensor += "CPU_UPTIME="+getUptime()+";"
-	mySensor += "CPU_SERIAL="+getSerial()+";"
-	mySensor += "CPU_DISK_USE="+getDiskSpace()[0]+";"
-	mySensor += "CPU_DISK_FREE="+getDiskSpace()[1]+";"
-	mySensor += "CPU_RAM_USE="+getRAMinfo()[1]+";"
-	mySensor += "CPU_RAM_FREE="+getRAMinfo()[2]+";"
-	mySensor += "CPU_LIP="+getIP()+";"
-	mySensor += "CPU_PIP="+getpubip()+";"
-	mySensor += "CPU_GATEWAY=" + getGateway() + ";"	
-	mySensor += getTempHum().replace(",",";") +";"
+	mySensor = "CPU_TEMP="+CPU_TEMP+";"
+	mySensor += "CPU_UPTIME="+CPU_UPTIME+";"
+	mySensor += "CPU_DISK_USE="+CPU_DISK_USE+";"
+	mySensor += "CPU_DISK_FREE="+CPU_DISK_FREE+";"
+	mySensor += "CPU_RAM_USE="+CPU_RAM_USE+";"
+	mySensor += "CPU_RAM_FREE="+CPU_RAM_FREE+";"
+	mySensor += "CPU_LIP="+CPU_LIP+";"
+	mySensor += "CPU_PIP="+CPU_PIP+";"
+	mySensor += "CPU_GATEWAY=" + CPU_GATEWAY + ";"	
+	mySensor += TEMPHUM1 +";"
+	mySensor += TEMPHUM2 +";"
 	eMsg = mySensor
 	eType = "sensor_update"
 	call(['rpi-log.py', eType, eMsg])
 
+
 def test():
-	myTempHum = getTempHum().replace(",",";")
-	print myTempHum
-	
-	
+#	print getpubip()
+    print (TEMPHUM1)
+    print (TEMPHUM2)
+#    network_reconnect()
+
+
+CPU_TEMP=getCPUtemperature()
+CPU_UPTIME=getUptime()
+CPU_SERIAL=getSerial()
+CPU_DISK_USE=getDiskSpace()[0]
+CPU_DISK_FREE=getDiskSpace()[1]
+CPU_RAM_USE=getRAMinfo()[1]
+CPU_RAM_FREE=getRAMinfo()[2]
+CPU_LIP=getIP()
+CPU_PIP=getpubip()
+CPU_GATEWAY=getGateway()
+TEMPHUM1 = getDTH11("4").replace(",",";").replace("Temp","Temp1").replace("Hum","Hum1")
+TEMPHUM2 = getDTH11("25").replace(",",";").replace("Temp","Temp2").replace("Hum","Hum2") 
 
 if (len(sys.argv) == 1):
 	run()

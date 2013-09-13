@@ -30,6 +30,7 @@ add_link(file_path +"/rpi-sensor.py","/usr/local/sbin/rpi-sensor.py")
 add_link(file_path +"/rpi-"+cpu_sn+".log.db","/usr/local/sbin/rpi-log.db")
 add_link(file_path +"/rpi-bootup.py","/usr/local/sbin/rpi-bootup.py")
 add_link(file_path +"/rpi-updateXively.py","/usr/local/sbin/rpi-updateXively.py")
+add_link(file_path +"/rpi-updateTwitter.py","/usr/local/sbin/rpi-updateTwitter.py")
 
 print os.popen("ls -l /usr/local/sbin/rpi*").read()
 
