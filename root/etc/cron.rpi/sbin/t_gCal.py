@@ -31,6 +31,12 @@ import sys
 import string
 import time
 
+def _FormatDatetime(tDatetime):
+#    print (tDatetime)
+#    result = tDatetime.replace(".000+","T")
+    result = tDatetime[0:10] + " " + tDatetime[11:19] 
+    return (result)
+
 
 class CalendarExample:
 
@@ -130,8 +136,11 @@ class CalendarExample:
     text_query = "#"
     query = gdata.calendar.client.CalendarEventQuery(text_query=text_query,start_min=start_date, start_max=end_date)
     feed = self.cal_client.GetCalendarEventFeed(q=query)
+#    print (feed)
     for i, an_event in zip(xrange(len(feed.entry)), feed.entry):
       print '\t%s. %s' % (i, an_event.title.text,)
+      print (an_event.content.text)
+#      print (an_event.where)
       for a_when in an_event.when:
         print '\t\tStart time: %s' % (a_when.start,)
         print '\t\tEnd time:   %s' % (a_when.end,)
@@ -521,14 +530,30 @@ class CalendarExample:
     return (insertEntry, updateEntry)
 
   def RunTest(self, delete='false'):
-	print ("Running test")
-	self._PrintUserCalendars()
-	self._PrintOwnCalendars()
-	self._PrintAllEventsOnDefaultCalendar()
-	self._FullTextQuery("#")
-	self._DateRangeQuery('2013-09-01','2013-09-08')
+    print ("Running test")
+#    self._PrintUserCalendars()
+#    self._PrintOwnCalendars()
+#    self._PrintAllEventsOnDefaultCalendar()
+#    self._FullTextQuery("TakePhoto")
+    self._DateRangeQueryEx('2013-09-16','2013-09-20')
+    
+    
+  def _DateRangeQueryEx(self, start_date='2013-09-01', end_date='2013-09-10'):
+    """Retrieves events from the server which occur during the specified date
+    range.  This uses the CalendarEventQuery class to generate the URL which is
+    used to retrieve the feed.  For more information on valid query parameters,
+    see: http://code.google.com/apis/calendar/reference.html#Parameters"""
 
-
+    print 'Date range queryEx for events on Primary Calendar: %s to %s' % (start_date, end_date,)
+    text_query = ""
+    query = gdata.calendar.client.CalendarEventQuery(text_query=text_query,start_min=start_date, start_max=end_date)
+    feed = self.cal_client.GetCalendarEventFeed(q=query)
+    for i, an_event in zip(xrange(len(feed.entry)), feed.entry):
+      for a_when in an_event.when:
+#        print '%s; %s; %s ; %s' % (an_event.title.text,an_event.content.text,_FormatDatetime(a_when.start.strip()),_FormatDatetime(a_when.end.strip()))
+        result = '%s; %s; %s ; %s' % (an_event.title.text,an_event.content.text,_FormatDatetime(a_when.start.strip()),_FormatDatetime(a_when.end.strip()))
+        print result
+        
   def Run(self, delete='false'):
     """Runs each of the example methods defined above.  Note how the result
     of the _InsertSingleEvent call is used for updating the title and the
@@ -563,17 +588,6 @@ class CalendarExample:
     self._UpdateAclRule(entry)
     self._DeleteAclRule(entry)
 
-    # Creating, updating and deleting calendars
-#    inserted_calendar = self._InsertCalendar()
-#    updated_calendar = self._UpdateCalendar(calendar=inserted_calendar)
-
-    # Insert Subscription
- #   inserted_subscription = self._InsertSubscription()
- #   updated_subscription = self._UpdateCalendarSubscription(selected=False)
-
-    # Execute a batch request
-  #  (quick_add_event, see_u_ext_prop) = self._batchRequest(see_u_ext_prop,
- #                                                          quick_add_event)
 
     # Delete entries if delete argument='true'
     if delete == 'true':
@@ -590,35 +604,10 @@ class CalendarExample:
 
 
 def main():
-  """Runs the CalendarExample application with the provided username and
-  and password values.  Authentication credentials are required.
-  NOTE: It is recommended that you run this sample using a test account."""
 
-  # parse command line options
-  try:
-    opts, args = getopt.getopt(sys.argv[1:], "", ["user=", "pw=", "delete="])
-  except getopt.error, msg:
-    print ('python calendarExample.py --user [username] --pw [password] ' +
-        '--delete [true|false] ')
-    sys.exit(2)
-
-  user = ''
-  pw = ''
+  user = 'rpi.fongming@gmail.com'
+  pw = 'Fongshek702'
   delete = 'false'
-
-  # Process options
-  for o, a in opts:
-    if o == "--user":
-      user = a
-    elif o == "--pw":
-      pw = a
-    elif o == "--delete":
-      delete = a
-
-  if user == '' or pw == '':
-    print ('python calendarExample.py --user [username] --pw [password] ' +
-        '--delete [true|false] ')
-    sys.exit(2)
 
   sample = CalendarExample(user, pw)
 #  sample.Run(delete)
