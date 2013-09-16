@@ -35,6 +35,7 @@ add_link(file_path +"/rpi-uploadGdrive.py","/usr/local/sbin/rpi-uploadGdrive.py"
 add_link(file_path +"/rpi-sendGmail.py","/usr/local/sbin/rpi-sendGmail.py")
 add_link(file_path +"/rpi-captureWebcam.py","/usr/local/sbin/rpi-captureWebcam.py")
 add_link(file_path +"/rpi-captureNupload.py","/usr/local/sbin/rpi-captureNupload.py")
+add_link(file_path +"/rpi-loadDevice.py","/usr/local/sbin/rpi-loadDevice.py")
 
 print os.popen("ls -l /usr/local/sbin/rpi*").read()
 

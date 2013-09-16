@@ -2,6 +2,7 @@
 #
 #
 import sys,os,thread,threading
+import time
 from subprocess import call
 
 def shell_cmd(cmd):
@@ -58,7 +59,7 @@ def getpubip(): #Gets the public IP by doing a get of the webpage below
 	return ("0.0.0.0")	
 	
 def getDTH11(pin):
-	cmd = "dth11 11 " + pin + "  | grep Temp"
+	cmd = "dth11 11 " + str(pin) + "  | grep Temp"
 #	print (cmd)
 	res = os.popen(cmd).readline().replace("\n","").strip()
 #	print (res)
@@ -67,6 +68,21 @@ def getDTH11(pin):
 	if (res.find("Temp")==-1):
 		res = os.popen('dth11 11 " + pin + "  | grep Temp').readline().replace("\n","").strip()
 	return(res.replace(",",";"))
+
+
+def getDTH11ex(pin):
+    cmd = "dth11 11 " + str(pin) + "  | grep Temp"
+    count = 0
+    res = os.popen(cmd).readline().replace("\n","").strip()
+    #	print (res)
+    while ((res.find("Temp")==-1) & (count <= 5)):
+        res = os.popen(cmd).read()
+        time.sleep(1)
+        count =count +1
+#        print (count, res)
+    
+#    print (res)
+    return(res.replace(",",";").replace("\n","").strip())
 
 
 def run():
@@ -88,8 +104,8 @@ def run():
 
 def test():
 #	print getpubip()
-    print (TEMPHUM1)
-    print (TEMPHUM2)
+    print (getDTH11ex(4))
+    print (getDTH11ex(25))
 #    network_reconnect()
 
 
@@ -103,8 +119,8 @@ CPU_RAM_FREE=getRAMinfo()[2]
 CPU_LIP=getIP()
 CPU_PIP=getpubip()
 CPU_GATEWAY=getGateway()
-TEMPHUM1 = getDTH11("4").replace(",",";").replace("Temp","Temp1").replace("Hum","Hum1")
-TEMPHUM2 = getDTH11("25").replace(",",";").replace("Temp","Temp2").replace("Hum","Hum2") 
+TEMPHUM1 = getDTH11ex(4).replace(",",";").replace("Temp","Temp1").replace("Hum","Hum1")
+TEMPHUM2 = getDTH11ex(25).replace(",",";").replace("Temp","Temp2").replace("Hum","Hum2") 
 
 if (len(sys.argv) == 1):
 	run()
